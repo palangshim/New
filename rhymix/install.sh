@@ -73,7 +73,7 @@ if [ ! -f "$INSTALL_DIR/.env" ]; then
   printf 'DB_PASSWORD=%s\nDB_ROOT_PASSWORD=%s\n' "$DB_PASSWORD" "$DB_ROOT_PASSWORD" > "$INSTALL_DIR/.env"
 fi
 chmod 600 "$INSTALL_DIR/.env"
-mkdir -p "$INSTALL_DIR/www"
+mkdir -p "$INSTALL_DIR/www" "$INSTALL_DIR/db"
 chmod 755 "$INSTALL_DIR/www"
 curl -fLsS --connect-timeout 15 --max-time 180 \
   https://codeload.github.com/rhymix/rhymix/tar.gz/6234bfd2bc133286113421e8a525f38a9fa3eaf5 \
