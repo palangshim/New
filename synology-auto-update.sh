@@ -6,6 +6,8 @@ export PATH
 APP_DIR=/volume1/docker/palangshim
 mkdir -p "$APP_DIR"
 cd "$APP_DIR"
+# Rhymix owns the website after migration; never restart the Python sample.
+if [ -f .rhymix-mode ]; then exit 0; fi
 # Prevent overlapping scheduled runs. A killed process may leave this directory;
 # remove .github-update.lock manually only after confirming no updater is running.
 if ! mkdir .github-update.lock 2>/dev/null; then exit 0; fi
