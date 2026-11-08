@@ -1,0 +1,21 @@
+services:
+  sample:
+    image: python:3.12-slim
+    command: ["python3", "-B", "/app/app.py", "--host", "0.0.0.0", "--port", "8000"]
+    restart: unless-stopped
+    user: "65534:65534"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "127.0.0.1:18080:8000"
+    volumes:
+      - ./app.py:/app/app.py:ro
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import json,urllib.request; r=urllib.request.urlopen('http://127.0.0.1:8000/health',timeout=3); assert json.load(r)['status']=='ok'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
