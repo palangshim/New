@@ -32,7 +32,7 @@ footer { font-size: 13px; color: #687c71; }
 </head>
 <body><main>
 <div class="brand">PALANGSHIM</div>
-<h1>안녕하세요, 반갑습니다!</h1>
+<h1>안녕하세요.</h1>
 <p>저의 작은 홈페이지에 오신 것을 환영합니다.<br>
 잠시 쉬어 가며, 오늘도 기분 좋은 하루 보내세요.</p>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 440"
