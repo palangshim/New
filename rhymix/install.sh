@@ -83,6 +83,24 @@ compose config >/dev/null
 # Build and initialize DB before stopping the previous homepage.
 compose build web
 compose pull db
+# Synology shared-folder ACLs can deny mysql even after container chown.
+# Only remove the DB directory ACL before its first initialization.
+compose stop db
+if [ ! -d "$INSTALL_DIR/db/mysql" ] && [ -x /usr/syno/bin/synoacltool ]; then
+  if /usr/syno/bin/synoacltool -get "$INSTALL_DIR/db" 2>/dev/null | grep -q 'ACL version:'; then
+    /usr/syno/bin/synoacltool -del "$INSTALL_DIR/db"
+  fi
+fi
+# Resolve mysql ownership using the image itself (no hard-coded NAS UID).
+# Verify an actual write before trying to start the database again.
+docker run --rm --network none --user 0:0 \
+  --mount "type=bind,src=$INSTALL_DIR/db,dst=/var/lib/mysql" \
+  --entrypoint sh mariadb:10.11 -ec '
+    chown mysql:mysql /var/lib/mysql
+    chmod 700 /var/lib/mysql
+    PROBE=$(gosu mysql mktemp /var/lib/mysql/.rhymix-permission.XXXXXX)
+    rm -f "$PROBE"
+  '
 compose up -d db
 DB_READY=false
 for ATTEMPT in $(seq 1 90); do
